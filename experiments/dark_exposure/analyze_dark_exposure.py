@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Feb  7 19:59:52 2023
+Created on Mon March  27 19:59:52 2023
 
 plots image with scale bar
 
-@author: kevin
+@author: kevin kim <kekim@hmc.edu>
 """
 
 
@@ -52,7 +52,7 @@ def analyzeLin():
     for i in range(0,50):
         tot=0
         exposure[i] = (i+1)
-        filename = f"intensityExposure{(i+1)}ms.npy"
+        filename = f"darkExposure{(i+1)}ms.npy"
         bayerData = np.load(filename, allow_pickle=True)
             
         # unpack the 2D bayer array data into the respective R,B,G channels.
@@ -67,7 +67,8 @@ def analyzeLin():
         g = rgb[:,:,1]
         
         # remove all zeros and reshape into 2d Matrix
-        g = g[g!=0].reshape(1232,3280)
+        g = g.flatten()[1::2].reshape(1232,3280)
+
         
         # strip RHS for green channel
         g = np.delete(g, np.s_[1640:3280],axis=1)
@@ -86,4 +87,54 @@ def analyzeLin():
     plt.title("intensity vs exposure time")
     plt.show()
     
-analyzeLin()
+# Function to analyzes image sets with constant exposure time
+def analyzeConst():
+    # These arrays hold x,y values used to plot intensity vs exposure. Their sizes must be adjusted accordingly.
+    exposure = np.zeros(50)
+    intensity = np.zeros(50)
+    avg = 0
+    
+    # the range parameter must match exactly of the parameter in the for loop in intensityExposureCaptureLinear.py
+    for i in range(0,50):
+        tot=0
+        exposure[i] = (i)
+        filename = f"darkExposure{(i)}.npy"
+        bayerData = np.load(filename, allow_pickle=True)
+            
+        # unpack the 2D bayer array data into the respective R,B,G channels.
+        rgb = np.zeros(bayerData.shape + (3,), dtype=bayerData.dtype)
+        
+        rgb[0::2, 0::2, 0] = bayerData[0::2, 0::2] # Red
+        rgb[1::2, 0::2, 1] = bayerData[1::2, 0::2] # Green
+        rgb[0::2, 1::2, 1] = bayerData[0::2, 1::2] # Green
+        rgb[1::2, 1::2, 2] = bayerData[1::2, 1::2] # Blue
+
+        # extract green channel
+        g = rgb[:,:,1]
+        
+        # remove all zeros and reshape into 2d Matrix
+        g = g.flatten()[1::2].reshape(1232,3280)
+
+        
+        # strip RHS for green channel
+        g = np.delete(g, np.s_[1640:3280],axis=1)
+    
+        intensity[i] = np.mean(g)
+            
+        # every 10 images show the raw image data
+        if (i%10 == 0):
+            showImage(g, f"set: {i}")
+            
+    
+    mean = np.mean(intensity)
+    # plot intensity vs exposure time graph
+    plt.scatter(exposure, intensity, label="measured intensity")
+    plt.axhline(y = mean, color = 'r', linestyle = '-', label="mean intensity")
+    plt.legend()
+    
+    plt.xlabel("t (image set)")
+    plt.ylabel("mean intensity of green channel")
+    plt.title("intensity vs image set")
+    plt.show()
+    
+analyzeConst()
