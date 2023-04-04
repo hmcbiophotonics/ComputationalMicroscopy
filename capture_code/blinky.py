@@ -14,13 +14,14 @@ def main():
 
 def showPixel(x,y):
     N_dots = 8*8
-    dots = dotstar.DotStar(board.SCK, board.MOSI, N_dots, brightness = 0.055)
+    dots = dotstar.DotStar(board.SCK, board.MOSI, N_dots, brightness = 0.040)
     led_idx = 8*x + y
-    dots[led_idx] = (255,0,0)
+    dots[led_idx] = (0,255,0)
 def killPixels():
     N_dots = 8*8
     dots = dotstar.DotStar(board.SCK, board.MOSI, N_dots, brightness = 0.05)
     dots[0] = (0,0,0)
 
+#showPixel(3,3)
 main()
 
