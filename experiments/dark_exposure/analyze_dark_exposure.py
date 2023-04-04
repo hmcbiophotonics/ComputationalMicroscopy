@@ -127,6 +127,7 @@ def analyzeConst():
             
     
     mean = np.mean(intensity)
+    print(mean)
     # plot intensity vs exposure time graph
     plt.scatter(exposure, intensity, label="measured intensity")
     plt.axhline(y = mean, color = 'r', linestyle = '-', label="mean intensity")

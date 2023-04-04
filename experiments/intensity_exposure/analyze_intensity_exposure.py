@@ -57,7 +57,7 @@ def analyzeLin():
             
         # unpack the 2D bayer array data into the respective R,B,G channels.
         rgb = np.zeros(bayerData.shape + (3,), dtype=bayerData.dtype)
-        
+        print(np.max(bayerData))
         rgb[0::2, 0::2, 0] = bayerData[0::2, 0::2] # Red
         rgb[1::2, 0::2, 1] = bayerData[1::2, 0::2] # Green
         rgb[0::2, 1::2, 1] = bayerData[0::2, 1::2] # Green
@@ -71,7 +71,7 @@ def analyzeLin():
         
         # strip RHS for green channel
         g = np.delete(g, np.s_[1640:3280],axis=1)
-    
+        print(g)
         intensity[i] = np.mean(g)
         
         # every 10 images show the raw image data
@@ -80,10 +80,13 @@ def analyzeLin():
     
     # plot intensity vs exposure time graph
     plt.scatter(exposure, intensity, label="measured intensity")
+    xanalytic = np.arange(35)
+    yanalytic = xanalytic*1.15+64
+    #plt.plot(xanalytic,yanalytic, color='red', label="y=1.15x+65")
     plt.legend()
     plt.xlabel("t (exposure time [ms])")
     plt.ylabel("mean intensity of green channel")
-    plt.title("intensity vs exposure time")
+    plt.title("intensity vs exposure time (diffuser)")
     plt.show()
     
 analyzeLin()
