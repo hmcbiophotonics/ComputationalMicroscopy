@@ -38,7 +38,7 @@ cam.awb_mode = "off"
 cam.awb_gains=g
 
 #set a slow framerate
-framerate=Fraction(1, 6),
+cam.framerate=Fraction(1, 6)
 sleep(2)
 print("Camera is Ready!")
 

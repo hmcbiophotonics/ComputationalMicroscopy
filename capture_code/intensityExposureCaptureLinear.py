@@ -26,6 +26,7 @@ try:
     os.mkdir(path) 
 except OSError as error: 
     print(error)  
+
 # Create camera object
 cam = PiCamera()
 
@@ -38,13 +39,13 @@ cam.awb_mode = "off"
 cam.awb_gains=g
 
 #set a slow framerate
-framerate=Fraction(1, 6),
+cam.framerate = Fraction(1,6)
 sleep(2)
 print("Camera is Ready!")
 
 # range parameters in for loop specifies range of exposure times.
-for i in range(0,50):
-    ss = int(1E3*(i+1))
+for i in range(0,100):
+    ss = int(1E4+1E3*(i+1)) #10 + 10*(i+1) ms
     cam.shutter_speed = ss
     with picamera.array.PiBayerArray(cam, output_dims=2) as output:
         cam.capture(output, 'jpeg', bayer=True)

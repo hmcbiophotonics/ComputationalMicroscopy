@@ -15,6 +15,9 @@ import picamera.array
 import os
 from datetime import datetime
 
+#exposure time in microseconds
+EXP = 1000 
+
 # Configure image capture folder path
 now = datetime.now()
 dt_string = now.strftime("%d-%m-%Y-%H-%M-%S")
@@ -38,14 +41,14 @@ cam.awb_mode = "off"
 cam.awb_gains=g
 
 #set a slow framerate
-framerate=Fraction(1, 6),
+cam.framerate=Fraction(1, 6)
 sleep(2)
 print("Camera is Ready!")
 
 # range parameters in for loop specifies range of exposure times.
 for i in range(0,10):
     # exposure time will be 100ms
-    cam.shutter_speed = int(1E3*100)
+    cam.shutter_speed = int(1E3*(47))
     with picamera.array.PiBayerArray(cam, output_dims=2) as output:
         cam.capture(output, 'jpeg', bayer=True)
         np.save(os.path.join(path,f"bayerCapture_{i}"),output.array)
