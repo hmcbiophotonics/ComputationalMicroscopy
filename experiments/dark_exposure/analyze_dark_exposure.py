@@ -92,6 +92,7 @@ def analyzeConst():
     # These arrays hold x,y values used to plot intensity vs exposure. Their sizes must be adjusted accordingly.
     exposure = np.zeros(50)
     intensity = np.zeros(50)
+    stddev = np.zeros(50)
     avg = 0
     
     # the range parameter must match exactly of the parameter in the for loop in intensityExposureCaptureLinear.py
@@ -120,7 +121,7 @@ def analyzeConst():
         g = np.delete(g, np.s_[1640:3280],axis=1)
     
         intensity[i] = np.mean(g)
-            
+        #stddev[i] = np.std(g)
         # every 10 images show the raw image data
         if (i%10 == 0):
             showImage(g, f"set: {i}")
@@ -131,6 +132,7 @@ def analyzeConst():
     # plot intensity vs exposure time graph
     plt.scatter(exposure, intensity, label="measured intensity")
     plt.axhline(y = mean, color = 'r', linestyle = '-', label="mean intensity")
+    #plt.errorbar(exposure,intensity,yerr=stddev,ecolor='r',elinewidth=1, label="std. dev error")
     plt.legend()
     
     plt.xlabel("t (image set)")
