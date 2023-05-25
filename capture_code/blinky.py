@@ -22,6 +22,6 @@ def killPixels():
     dots = dotstar.DotStar(board.SCK, board.MOSI, N_dots, brightness = 0.05)
     dots[0] = (0,0,0)
 
-#showPixel(3,3)
-main()
+showPixel(3,3)
+#main()
 
