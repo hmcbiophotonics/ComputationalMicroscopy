@@ -4,7 +4,7 @@ Created on Wed Feb 22 09:13:22 2023
 
 @author: kevin
 """
-#NOTE: With center LED RED with brightness of .040, the captured image saturates out at 3.4ms.
+#NOTE: Image saturates out at ~162ms for the 16x16 array on the LEGO setup.
 
 # Import Libraries
 from time import sleep
@@ -49,11 +49,12 @@ cam.start()
 print("Camera is Ready!")
 
 # range parameters in for loop specifies range of exposure times.
-for i in range(300,500):
+for i in range(1500,1800,10):
     # exposure time will be 100ms
     ss = int(1E2*i)
     cam.set_controls({"ExposureTime": ss})
     minerr = ss*.002
+    print(ss)
     while (abs(int(cam.capture_metadata()["ExposureTime"]) - ss)) > minerr:
         print("Delta: ", int(cam.capture_metadata()["ExposureTime"]) - ss)
         print("Minerr:", minerr)
@@ -61,6 +62,7 @@ for i in range(300,500):
     raw=cam.capture_array("raw").view(np.uint16)
     metadata=cam.capture_metadata()
     print("actual exposure time: ", metadata["ExposureTime"])
+    print("max: ", np.max(raw))
     if np.max(raw[1::2,1::2]) >= 1023:
         print(f"SATURATED OUT AT {float(i/10)} ms with MAX of {np.max(raw)}")
         break
